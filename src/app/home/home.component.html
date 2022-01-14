@@ -1,0 +1,173 @@
+<div>
+  <mat-card class="mat-elevation-z8">
+    <br><br>
+    <mat-card-content>
+      <form [formGroup]="DryCleanForm" (ngSubmit)="onFormSubmit()" >
+        <table>
+          <tr>
+            <td class="tbl1">
+              <mat-form-field class="demo-full-width">
+                <input formControlName="arabicName" matTooltip="Enter Employee Arabic Name" matInput placeholder="Arabic Name" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!DryCleanForm.get('arabicName').value && DryCleanForm.get('arabicName').touched"></span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="demo-full-width">
+                <input formControlName="englishName" matTooltip="Enter Employee English Name" matInput placeholder="English Name" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!DryCleanForm.get('englishName').value && DryCleanForm.get('englishName').touched"></span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="demo-full-width">
+                <input formControlName="arabicAddress" matTooltip="Enter Employee Arabic Address" matInput placeholder="Arabic Address" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!DryCleanForm.get('arabicAddress').value && DryCleanForm.get('arabicAddress').touched"></span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="demo-full-width">
+                <input formControlName="englishAddress" matTooltip="Enter Employee English Address" matInput placeholder="English Address" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!DryCleanForm.get('englishAddress').value && DryCleanForm.get('englishAddress').touched"></span>
+              </mat-error>
+            </td>
+          </tr>
+          <tr>
+            <td class="tbl1">
+              <mat-form-field class="demo-full-width">
+                <input formControlName="mobileNumber" matTooltip="Enter Employee Mobile Number" matInput placeholder="Mobile Number" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!DryCleanForm.get('mobileNumber').value && DryCleanForm.get('mobileNumber').touched"></span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="demo-full-width">
+                <input formControlName="latitude" matTooltip="Enter Employee Latitude" matInput placeholder="Latitude" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!DryCleanForm.get('latitude').value && DryCleanForm.get('latitude').touched"></span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="demo-full-width">
+                <input formControlName="longitude" matTooltip="Enter Employee Longitude" matInput placeholder="Longitude" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!DryCleanForm.get('longitude').value && DryCleanForm.get('longitude').touched"></span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field>
+                <mat-label>Area</mat-label>
+                <mat-select formControlName="areaId" matTooltip="Select Area" autocomplete="off">
+                  <mat-option *ngFor="let area of (allAreas | async)" [value]="area.id">
+                    {{area.titleEn}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <td class="content-center">
+              <button type="submit" mat-raised-button color="accent" matTooltip="Submit" [disabled]="!DryCleanForm.valid">Submit</button>
+              <button type="reset" mat-raised-button color="accent" matTooltip="Reset" (click)="resetForm()">Reset</button>
+            </td>
+            <td>
+              <p *ngIf="dataSaved" style="color:
+rgb(0, 128, 0);font-size:20px;font-weight:bold" Class="success" >
+                {{massage}}
+              </p>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+        <br><br>
+
+        <mat-form-field>
+          <mat-select (selectionChange)="applyFilter($event.value)" matTooltip="Select Area" autocomplete="off" [(value)]="areaFilter" >
+            <mat-option value="0">ALL Areas</mat-option>
+            <mat-option *ngFor="let area of (allAreas | async)" [value]="area.id">
+              {{area.titleEn}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- <button mat-icon-button aria-label="Example icon button with a delete icon" type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="DeleteData()"><mat-icon>delete</mat-icon></button>
+ -->
+        <div>
+
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="box-shadow: 0 3px 5px -1px 
+rgba(0,0,0,.2), 0 6px 10px 0 
+rgba(0,0,0,.14), 0 1px 18px 0 
+rgba(0,0,0,.12);">
+
+            <ng-container matColumnDef="ArabicArea">
+              <th mat-header-cell class="w-5" *matHeaderCellDef mat-sort-header>Arabic Area</th>
+              <td mat-cell *matCellDef="let item"> {{item.area.titleAr}} </td>
+            </ng-container>
+            <ng-container matColumnDef="EnglishArea">
+              <th mat-header-cell class="w-5" *matHeaderCellDef mat-sort-header>English Area</th>
+              <td mat-cell *matCellDef="let item"> {{item.area.titleEn}} </td>
+            </ng-container>
+            <ng-container matColumnDef="ArabicName">
+              <th mat-header-cell class="w-15" *matHeaderCellDef mat-sort-header>Arabic Name </th>
+              <td mat-cell *matCellDef="let item"> {{item.arabicName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="EnglishName">
+              <th mat-header-cell class="w-15" *matHeaderCellDef mat-sort-header>English Name</th>
+              <td mat-cell *matCellDef="let item"> {{item.englishName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="ArabicAddress">
+              <th mat-header-cell  class="w-15" *matHeaderCellDef mat-sort-header>Arabic Address</th>
+              <td mat-cell *matCellDef="let item"> {{item.arabicAddress}} </td>
+            </ng-container>
+            <ng-container matColumnDef="EnglishAddress">
+              <th mat-header-cell class="w-15" *matHeaderCellDef mat-sort-header>English Address</th>
+              <td mat-cell *matCellDef="let item"> {{item.englishAddress}} </td>
+            </ng-container>
+            <ng-container matColumnDef="MobileNumber">
+              <th mat-header-cell class="w-8" *matHeaderCellDef mat-sort-header>Mobile Number</th>
+              <td mat-cell *matCellDef="let item"> {{item.mobileNumber}} </td>
+            </ng-container>
+             <ng-container matColumnDef="Latitude">
+              <th mat-header-cell class="w-8" *matHeaderCellDef mat-sort-header>Latitude</th>
+              <td mat-cell *matCellDef="let item"> {{item.latitude }} </td>
+            </ng-container> 
+            <ng-container matColumnDef="Longitude">
+              <th mat-header-cell class="w-8" *matHeaderCellDef mat-sort-header>Longitude</th>
+              <td mat-cell *matCellDef="let item"> {{item.longitude}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Edit">
+              <th mat-header-cell class="w-3" *matHeaderCellDef mat-sort-header> Edit </th>
+
+              <td mat-cell *matCellDef="let item">
+
+                <button mat-icon-button aria-label="Example icon button with a vertical three dot icon" type="button" mat-raised-button color="accent" matTooltip="Edit" (click)="loadLaundryToEdit(item.id)" ><mat-icon>edit</mat-icon></button>
+
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Delete">
+              <th mat-header-cell class="w-3" *matHeaderCellDef mat-sort-header> Delete </th>
+              <td mat-cell *matCellDef="let item"> <button mat-icon-button aria-label="Example icon button with a delete icon" type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="deleteById(item.id)" ><mat-icon>delete_forever</mat-icon></button></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> 
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
